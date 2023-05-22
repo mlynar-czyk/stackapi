@@ -153,4 +153,7 @@ cython_debug/
 
 
 # Test files
-.json
+*.json
+
+# devcontainer -allow
+!devcontainer.json
