@@ -1,4 +1,4 @@
-# Program Explanation
+# What ?
 
 This program retrieves questions and their corresponding answers from the Stack Exchange API based on a specified tag and date. The retrieved data is then saved in a JSON file.
 
