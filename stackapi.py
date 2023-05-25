@@ -69,7 +69,7 @@ def main():
         question_id = question["question_id"]
         answers = fetch_answers(question_id, site)
         time.sleep(1)
-
+                   
         question_data = {
             "question": question,
             "answers": answers
