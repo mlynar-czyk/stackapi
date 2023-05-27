@@ -19,6 +19,7 @@ filter = "!BLgpu)DfJ(d9Rhoza_YLz8n3TIrIvY"
 date_obj = datetime.datetime.strptime(env_date, "%Y-%m-%d")
 timestamp = int(time.mktime(date_obj.timetuple()))
 
+
 def fetch_questions(tag, date, site):
     base_url = "https://api.stackexchange.com/2.3/questions"
     params = {
@@ -28,7 +29,7 @@ def fetch_questions(tag, date, site):
         "site": site,
         "filter": filter,
         "fromdate": date,
-        "is_answered": True
+        "is_answered": True,
     }
 
     response = requests.get(base_url, params=params)
@@ -44,7 +45,7 @@ def fetch_answers(question_id, site):
         "sort": "votes",
         "site": site,
         "filter": filter,
-        "is_accepted": True
+        "is_accepted": True,
     }
 
     response = requests.get(base_url, params=params)
@@ -52,14 +53,16 @@ def fetch_answers(question_id, site):
     print(response.url)
     return data["items"]
 
+
 def save_to_json(file_path, questions_with_answers):
     with open(file_path, "w") as file:
         json.dump(questions_with_answers, file, indent=4)
 
+
 def main():
     folder_path = "."  # JSON folder path
-    tag = env_tag # stackexchange tag
-    date = timestamp # UNIX timestamp date
+    tag = env_tag  # stackexchange tag
+    date = timestamp  # UNIX timestamp date
     site = env_site  # Stackexchange site (for example : "stackoverflow")
 
     questions = fetch_questions(tag, date, site)
@@ -69,17 +72,15 @@ def main():
         question_id = question["question_id"]
         answers = fetch_answers(question_id, site)
         time.sleep(1)
-                   
-        question_data = {
-            "question": question,
-            "answers": answers
-        }
-        questions_with_answers.append(question_data)       
+
+        question_data = {"question": question, "answers": answers}
+        questions_with_answers.append(question_data)
 
     file_path = f"{folder_path}/questions_with_answers.json"
     save_to_json(file_path, questions_with_answers)
 
     print(f"Questions and answers have been copied in JSON format at : {file_path}")
+
 
 if __name__ == "__main__":
     main()
