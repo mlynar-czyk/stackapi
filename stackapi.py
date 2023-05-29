@@ -73,6 +73,10 @@ def main():
         answers = fetch_answers(question_id, site)
         time.sleep(1)
 
+        for index, answer in enumerate(answers):
+            if answer['is_accepted'] is False:
+                answers.remove(index)
+
         question_data = {"question": question, "answers": answers}
         questions_with_answers.append(question_data)
 
