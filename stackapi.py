@@ -80,7 +80,7 @@ def main():
 
         for index, answer in enumerate(answers):
             if answer['is_accepted'] is False:
-                answers.remove(index)
+                answers.pop(index)
 
         question_data = {"question": question, "answers": answers}
         questions_with_answers.append(question_data)
