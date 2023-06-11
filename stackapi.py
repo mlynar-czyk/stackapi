@@ -85,7 +85,7 @@ def main():
         question_data = {"question": question, "answers": answers}
         questions_with_answers.append(question_data)
 
-    file_path = f"{folder_path}/questions_with_answers.json"
+    file_path = f"{folder_path}/questions_with_answers_{env_date}.json"
     save_to_json(file_path, questions_with_answers)
 
     print(f"Questions and answers have been copied in JSON format at : {file_path}")
