@@ -154,6 +154,7 @@ cython_debug/
 
 # Test files
 *.json
+*.jsonl
 
 # devcontainer -allow
 !devcontainer.json
