@@ -3,6 +3,7 @@ import os
 import datetime
 import time
 import requests
+import argparse
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -138,10 +139,31 @@ def save_to_json(file_path, data):
     with open(file_path, "w", encoding='utf-8') as file:
         json.dump(data, file, indent=4)
 
+def save_to_jsonl(file_path, data):
+    """
+    Save the paired questions and answers to a JSONL file in prompt-response format.
+    """
+    with open(file_path, "w", encoding='utf-8') as file:
+        for item in data:
+            question_title = item["question"].get("title", "")
+            question_body = item["question"].get("body", "")
+            prompt = f"{question_title}\n\n{question_body}".strip()
+            response = item["accepted_answer"].get("body", "")
+            
+            jsonl_entry = {
+                "prompt": prompt,
+                "response": response
+            }
+            file.write(json.dumps(jsonl_entry, ensure_ascii=False) + "\n")
+
 def main():
     """
     Run the Stack Exchange API fetcher.
     """
+    parser = argparse.ArgumentParser(description="Fetch Stack Exchange questions and answers")
+    parser.add_argument("--jsonl", action="store_true", help="Output in JSONL format instead of JSON")
+    args = parser.parse_args()
+    
     folder_path = "."
     tag = env_tag
     date = timestamp
@@ -159,10 +181,15 @@ def main():
     # Step 4: Pair questions with their accepted answers
     paired_data = pair_questions_with_accepted_answers(questions, all_answers)
     
-    # Step 5: Save to JSON
-    file_path = f"{folder_path}/questions_with_accepted_answers_{env_date}.json"
-    save_to_json(file_path, paired_data)
-    print(f"Questions and accepted answers saved to: {file_path}")
+    # Step 5: Save to appropriate format
+    if args.jsonl:
+        file_path = f"{folder_path}/questions_with_accepted_answers_{env_date}.jsonl"
+        save_to_jsonl(file_path, paired_data)
+        print(f"Questions and accepted answers saved to JSONL: {file_path}")
+    else:
+        file_path = f"{folder_path}/questions_with_accepted_answers_{env_date}.json"
+        save_to_json(file_path, paired_data)
+        print(f"Questions and accepted answers saved to JSON: {file_path}")
 
 if __name__ == "__main__":
     main()
